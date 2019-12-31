@@ -25,7 +25,7 @@ public class JpaSpecificationTests {
 	@Test
 	public void testFindByCondition()  {
 		int page=0,size=10;
-		Sort sort = new Sort(Sort.Direction.DESC, "id");
+		Sort sort = Sort.by(Sort.Direction.DESC, "id");
 		Pageable pageable = PageRequest.of(page, size, sort);
 		UserDetailParam param=new UserDetailParam();
 		param.setIntroduction("程序员");

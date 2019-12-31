@@ -62,7 +62,7 @@ public class UserRepositoryTests {
 	@Test
 	public void testPageQuery()  {
 		int page=1,size=2;
-		Sort sort = new Sort(Sort.Direction.DESC, "id");
+		Sort sort = Sort.by(Sort.Direction.DESC, "id");
 		Pageable pageable = PageRequest.of(page, size, sort);
 		userRepository.findALL(pageable);
 		userRepository.findByNickName("aa", pageable);
