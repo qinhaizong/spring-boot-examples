@@ -27,10 +27,12 @@ public class MybatisStarter {
         DataSource dataSource = new UnpooledDataSource("com.mysql.cj.jdbc.Driver", "jdbc:mysql://localhost:3306/test?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true", "root", "root");
         // factory pattern:
         // org.apache.ibatis.session.Configuration.newExecutor(org.apache.ibatis.transaction.Transaction, org.apache.ibatis.session.ExecutorType)
+        // org.apache.ibatis.reflection.factory.ObjectFactory
         TransactionFactory transactionFactory = new JdbcTransactionFactory();
         // builder pattern:
         // org.apache.ibatis.mapping.Environment.Builder.build
         // org.apache.ibatis.session.SqlSessionFactoryBuilder.build(org.apache.ibatis.session.Configuration)
+        // org.apache.ibatis.mapping.CacheBuilder.build
         Environment environment = new Environment("dev", transactionFactory, dataSource);
         Configuration configuration = new Configuration(environment);
         configuration.addMapper(UserMapper.class);
@@ -39,7 +41,7 @@ public class MybatisStarter {
         // proxy pattern:
         // org.apache.ibatis.binding.MapperProxyFactory.newInstance(org.apache.ibatis.binding.MapperProxy<T>)
         UserMapper mapper = session.getMapper(UserMapper.class);
-        // delegate pattern:
+        // decorator pattern:
         // org.apache.ibatis.session.defaults.DefaultSqlSession.update(java.lang.String, java.lang.Object)
         // interceptor pattern: plugins
         // org.apache.ibatis.plugin.InterceptorChain
