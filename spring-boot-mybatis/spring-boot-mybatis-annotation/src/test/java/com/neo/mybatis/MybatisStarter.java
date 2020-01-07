@@ -4,7 +4,13 @@ import com.neo.enums.UserSexEnum;
 import com.neo.mapper.UserMapper;
 import com.neo.model.User;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
+import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.plugin.Intercepts;
+import org.apache.ibatis.plugin.Invocation;
+import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -35,6 +41,7 @@ public class MybatisStarter {
         // org.apache.ibatis.mapping.CacheBuilder.build
         Environment environment = new Environment("dev", transactionFactory, dataSource);
         Configuration configuration = new Configuration(environment);
+        configuration.addInterceptor(new MyInterceptor());
         configuration.addMapper(UserMapper.class);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(configuration);
         SqlSession session = sessionFactory.openSession();
@@ -48,5 +55,13 @@ public class MybatisStarter {
         mapper.insert(new User("hz", "hz", UserSexEnum.MAN));
         session.commit();
         session.close();
+    }
+
+    @Intercepts({@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})})
+    public static class MyInterceptor implements Interceptor {
+        @Override
+        public Object intercept(Invocation invocation) throws Throwable {
+            return invocation.proceed();
+        }
     }
 }
